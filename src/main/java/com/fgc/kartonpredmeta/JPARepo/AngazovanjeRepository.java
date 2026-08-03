@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AngazovanjeRepository extends JpaRepository<Angazovanje, Long> {
+    boolean existsByNastavnikId(Long id);
 }

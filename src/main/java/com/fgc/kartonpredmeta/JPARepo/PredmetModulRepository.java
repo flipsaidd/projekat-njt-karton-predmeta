@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PredmetModulRepository extends JpaRepository<PredmetModul, Long> {
+    boolean existsByModulId(Long id);
 }

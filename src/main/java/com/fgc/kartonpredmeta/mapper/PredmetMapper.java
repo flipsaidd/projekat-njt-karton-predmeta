@@ -5,6 +5,7 @@ import com.fgc.kartonpredmeta.dto.PredmetResponseDTO;
 import com.fgc.kartonpredmeta.model.Predmet;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring",uses={PredmetModulMapper.class, AngazovanjeMapper.class, PredmetnaObavezaMapper.class, PredmetLiteraturaMapper.class})
 public interface PredmetMapper {

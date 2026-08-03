@@ -5,6 +5,7 @@ import com.fgc.kartonpredmeta.dto.PredmetLiteraturaResponseDTO;
 import com.fgc.kartonpredmeta.model.PredmetLiteratura;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface PredmetLiteraturaMapper {
@@ -20,4 +21,9 @@ public interface PredmetLiteraturaMapper {
     @Mapping(target = "predmet", ignore = true)
     @Mapping(source="literaturaId", target="literatura.id")
     PredmetLiteratura toEntity(PredmetLiteraturaRequestDTO dto);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "predmet", ignore = true)
+    @Mapping(target = "literatura", ignore = true)
+    void updateEntityFromDTO(PredmetLiteraturaRequestDTO dto, @org.mapstruct.MappingTarget PredmetLiteratura entitet);
 }

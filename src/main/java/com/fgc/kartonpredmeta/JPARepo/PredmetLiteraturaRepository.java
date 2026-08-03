@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PredmetLiteraturaRepository extends JpaRepository<PredmetLiteratura, Long> {
+    boolean existsByLiteraturaId(Long id);
 }

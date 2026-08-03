@@ -56,7 +56,7 @@ public class Predmet implements DomainEntity{
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<PredmetModul> predmetModuli = new ArrayList<>();
+    private List<PredmetModul> moduli = new ArrayList<>();
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -64,9 +64,9 @@ public class Predmet implements DomainEntity{
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<PredmetnaObaveza> predmetneObaveze = new ArrayList<>();
+    private List<PredmetnaObaveza> obaveze = new ArrayList<>();
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<PredmetLiteratura> literaturaList = new ArrayList<>();
+    private List<PredmetLiteratura> literature = new ArrayList<>();
 }
