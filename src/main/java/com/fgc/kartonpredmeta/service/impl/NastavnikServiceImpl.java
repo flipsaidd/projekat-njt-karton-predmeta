@@ -6,6 +6,7 @@ import com.fgc.kartonpredmeta.dto.NastavnikDTO;
 import com.fgc.kartonpredmeta.mapper.NastavnikMapper;
 import com.fgc.kartonpredmeta.model.Nastavnik;
 import com.fgc.kartonpredmeta.service.NastavnikService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class NastavnikServiceImpl implements NastavnikService {
     public NastavnikDTO getNastavnikById(Long id) {
         return nastavnikRepository.findById(id)
                 .map(nastavnikMapper::toDTO)
-                .orElseThrow(() -> new RuntimeException("Nastavnik ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Nastavnik ne postoji sa datim ID-jem"));
     }
 
     @Override
@@ -47,7 +48,7 @@ public class NastavnikServiceImpl implements NastavnikService {
     @Transactional
     public NastavnikDTO updateNastavnik(Long id, NastavnikDTO nastavnikDTO) {
         Nastavnik existingNastavnik = nastavnikRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Nastavnik ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Nastavnik ne postoji sa datim ID-jem"));
 
         nastavnikMapper.updateEntityFromDTO(nastavnikDTO, existingNastavnik);
 
@@ -59,10 +60,10 @@ public class NastavnikServiceImpl implements NastavnikService {
     @Transactional
     public void deleteNastavnik(Long id) {
         if(!nastavnikRepository.existsById(id)) {
-            throw new RuntimeException("Nastavnik ne postoji sa datim ID-jem");
+            throw new EntityNotFoundException("Nastavnik ne postoji sa datim ID-jem");
         }
         if(angazovanjeRepository.existsByNastavnikId(id)) {
-            throw new RuntimeException("Nastavnik ne može biti obrisan jer je vezan za angazovanja");
+            throw new IllegalStateException("Nastavnik ne može biti obrisan jer je vezan za angazovanja");
         }
         nastavnikRepository.deleteById(id);
     }

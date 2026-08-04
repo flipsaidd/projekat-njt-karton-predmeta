@@ -5,6 +5,7 @@ import com.fgc.kartonpredmeta.dto.StudijskiProgramDTO;
 import com.fgc.kartonpredmeta.mapper.StudijskiProgramMapper;
 import com.fgc.kartonpredmeta.model.StudijskiProgram;
 import com.fgc.kartonpredmeta.service.StudijskiProgramService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class StudijskiProgramServiceImpl implements StudijskiProgramService {
     @Override
     public StudijskiProgramDTO getStudijskiProgram(Long id) {
         return studijskiProgramRepository.findById(id).map(studijskiProgramMapper::toDTO)
-                .orElseThrow(()->new RuntimeException("Studijski program ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Studijski program ne postoji sa datim ID-jem"));
     }
 
     @Override
@@ -40,7 +41,7 @@ public class StudijskiProgramServiceImpl implements StudijskiProgramService {
     @Override
     @Transactional
     public StudijskiProgramDTO updateStudijskiProgram(Long id, StudijskiProgramDTO studijskiProgramDTO) {
-        StudijskiProgram sp=studijskiProgramRepository.findById(id).orElseThrow(()->new RuntimeException("Studijski program ne postoji sa datim ID-jem"));
+        StudijskiProgram sp=studijskiProgramRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Studijski program ne postoji sa datim ID-jem"));
         studijskiProgramMapper.updateEntityFromDTO(studijskiProgramDTO, sp);
         StudijskiProgram updatedSP=studijskiProgramRepository.save(sp);
         return studijskiProgramMapper.toDTO(updatedSP);
@@ -49,7 +50,7 @@ public class StudijskiProgramServiceImpl implements StudijskiProgramService {
     @Override
     @Transactional
     public void deleteStudijskiProgram(Long id) {
-        StudijskiProgram sp=studijskiProgramRepository.findById(id).orElseThrow(()->new RuntimeException("Studijski program ne postoji sa datim ID-jem"));
+        StudijskiProgram sp=studijskiProgramRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Studijski program ne postoji sa datim ID-jem"));
         studijskiProgramRepository.delete(sp);
     }
 }

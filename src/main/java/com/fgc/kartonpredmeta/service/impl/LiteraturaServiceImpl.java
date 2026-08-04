@@ -6,6 +6,7 @@ import com.fgc.kartonpredmeta.dto.LiteraturaDTO;
 import com.fgc.kartonpredmeta.mapper.LiteraturaMapper;
 import com.fgc.kartonpredmeta.model.Literatura;
 import com.fgc.kartonpredmeta.service.LiteraturaService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class LiteraturaServiceImpl implements LiteraturaService {
 
     @Override
     public LiteraturaDTO getLiteraturaById(Long id) {
-        return literaturaRepository.findById(id).map(literaturaMapper::toDTO).orElseThrow(()->new RuntimeException("Literatura ne postoji sa datim ID-jem"));
+        return literaturaRepository.findById(id).map(literaturaMapper::toDTO).orElseThrow(() -> new EntityNotFoundException("Literatura ne postoji sa datim ID-jem"));
     }
 
     @Override
@@ -42,7 +43,7 @@ public class LiteraturaServiceImpl implements LiteraturaService {
     @Override
     @Transactional
     public LiteraturaDTO updateLiteratura(Long id, LiteraturaDTO literaturaDTO) {
-        Literatura literatura= literaturaRepository.findById(id).orElseThrow(()->new RuntimeException("Literatura ne postoji sa datim ID-jem"));
+        Literatura literatura= literaturaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Literatura ne postoji sa datim ID-jem"));
 
         literaturaMapper.updateEntityFromDTO(literaturaDTO, literatura);
 
@@ -54,10 +55,10 @@ public class LiteraturaServiceImpl implements LiteraturaService {
     @Transactional
     public void deleteLiteratura(Long id) {
         if(!literaturaRepository.existsById(id)){
-            throw new RuntimeException("Literatura ne postoji sa datim ID-jem");
+            throw new EntityNotFoundException("Literatura ne postoji sa datim ID-jem");
         }
         if(predmetLiteraturaRepository.existsByLiteraturaId(id)){
-            throw new RuntimeException("Literatura ne može biti obrisana jer je vezana za predmete");
+            throw new IllegalStateException("Literatura ne može biti obrisana jer je vezana za predmete");
         }
         literaturaRepository.deleteById(id);
     }

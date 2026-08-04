@@ -10,6 +10,7 @@ import com.fgc.kartonpredmeta.model.Literatura;
 import com.fgc.kartonpredmeta.model.Predmet;
 import com.fgc.kartonpredmeta.model.PredmetLiteratura;
 import com.fgc.kartonpredmeta.service.PredmetLiteraturaService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,12 @@ public class PredmetLiteraturaServiceImpl implements PredmetLiteraturaService {
     @Transactional
     public PredmetLiteraturaResponseDTO dodajLiteraturuNaPredmet(Long predmetId, PredmetLiteraturaRequestDTO requestDTO) {
         Predmet predmet= predmetRepository.findById(predmetId)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
         Literatura literatura= literaturaRepository.findById(requestDTO.getLiteraturaId())
-                .orElseThrow(()->new RuntimeException("Literatura ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Literatura ne postoji sa datim ID-jem"));
 
         if(predmet.getLiterature().stream().anyMatch(pl->pl.getLiteratura().getId().equals(literatura.getId()))){
-            throw new RuntimeException("Literatura je već dodata na predmet");
+            throw new IllegalArgumentException("Literatura je već dodata na predmet");
         }
 
         PredmetLiteratura predmetLiteratura= predmetLiteraturaMapper.toEntity(requestDTO);
@@ -46,7 +47,7 @@ public class PredmetLiteraturaServiceImpl implements PredmetLiteraturaService {
     @Override
     public List<PredmetLiteraturaResponseDTO> getAllLiteraturaByPredmetId(Long predmetId) {
         Predmet predmet=predmetRepository.findById(predmetId)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
         return predmet.getLiterature().stream().map(predmetLiteraturaMapper::toResponseDTO).toList();
     }
 
@@ -54,22 +55,22 @@ public class PredmetLiteraturaServiceImpl implements PredmetLiteraturaService {
     @Transactional
     public PredmetLiteraturaResponseDTO updatePredmetLiteratura(Long predmetId, Long predmetLiteraturaId, PredmetLiteraturaRequestDTO requestDTO) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         PredmetLiteratura predmetLiteratura = predmetLiteraturaRepository.findById(predmetLiteraturaId)
-                .orElseThrow(() -> new RuntimeException("PredmetLiteratura ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("PredmetLiteratura ne postoji sa datim ID-jem"));
 
         if (!predmet.getId().equals(predmetLiteratura.getPredmet() != null ? predmetLiteratura.getPredmet().getId() : null)) {
-            throw new RuntimeException("Literatura ne pripada datom predmetu");
+            throw new IllegalArgumentException("Literatura ne pripada datom predmetu");
         }
 
         Literatura literatura = literaturaRepository.findById(requestDTO.getLiteraturaId())
-                .orElseThrow(() -> new RuntimeException("Literatura ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Literatura ne postoji sa datim ID-jem"));
 
         boolean postojiDuplikat = predmet.getLiterature().stream()
                 .anyMatch(pl -> !pl.getId().equals(predmetLiteraturaId) && pl.getLiteratura().getId().equals(literatura.getId()));
         if (postojiDuplikat) {
-            throw new RuntimeException("Literatura je već dodata na predmet");
+            throw new IllegalArgumentException("Literatura je već dodata na predmet");
         }
 
         predmetLiteraturaMapper.updateEntityFromDTO(requestDTO, predmetLiteratura);
@@ -82,13 +83,13 @@ public class PredmetLiteraturaServiceImpl implements PredmetLiteraturaService {
     @Transactional
     public void deleteLiteraturaFromPredmet(Long predmetId, Long predmetLiteraturaId) {
         Predmet predmet=predmetRepository.findById(predmetId)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         PredmetLiteratura predmetLiteratura=predmetLiteraturaRepository.findById(predmetLiteraturaId)
-                .orElseThrow(()->new RuntimeException("PredmetLiteratura ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("PredmetLiteratura ne postoji sa datim ID-jem"));
 
         if (!predmet.getId().equals(predmetLiteratura.getPredmet() != null ? predmetLiteratura.getPredmet().getId() : null)) {
-            throw new RuntimeException("Literatura ne pripada datom predmetu");
+            throw new IllegalArgumentException("Literatura ne pripada datom predmetu");
         }
 
         predmetLiteraturaRepository.delete(predmetLiteratura);

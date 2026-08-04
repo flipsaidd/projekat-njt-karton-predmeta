@@ -1,0 +1,107 @@
+### Prijava administratora (Login)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "ariana",
+  "password": "grande"
+}
+
+> {%
+    // Ova skripta hvata token iz JSON odgovora i čuva ga pod imenom "auth_token"
+    client.global.set("auth_token", response.body.token);
+%}
+
+### 2. GET Nastavnici (pusti ovo drugo)
+GET http://localhost:8080/api/nastavnici
+Authorization: Bearer {{auth_token}}
+
+### 3. POST dodavanje literature
+POST http://localhost:8080/api/literatura/create
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naslov": "Uvod u programiranje",
+  "autori": "Marko Marković",
+  "godinaIzdanja": 2021,
+  "izdavac": "Akademska misao"
+}
+
+### 4. POST studijski program
+POST http://localhost:8080/api/sp/create
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naziv": "Eletrotehnika i računarstvo",
+  "skracenica": "ER"
+}
+
+### 5. POST dodavanje modula
+POST http://localhost:8080/api/modul/create
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naziv": "Signali i sistemi",
+  "studijskiProgramId": 1
+}
+
+### 6. GET sp
+GET http://localhost:8080/api/sp
+Authorization: Bearer {{auth_token}}
+
+
+### dodaj angazovanje
+POST http://localhost:8080/api/predmet/1/angazovanje/add
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "nastavnikId": 2,
+  "ulogaNastavnika": "SARADNIK"
+
+}
+
+### brisi angazovanje
+DELETE http://localhost:8080/api/predmet/1/angazovanje/4
+Authorization: Bearer {{auth_token}}
+
+### dodaj angazovanje drugo
+POST http://localhost:8080/api/predmet/1/angazovanje/add
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "nastavnikId": 1,
+  "ulogaNastavnika": "NOSILAC"
+
+}
+
+### brisi angazovanje
+DELETE http://localhost:8080/api/predmet/1/angazovanje/2
+Authorization: Bearer {{auth_token}}
+
+
+### updatovanje
+PUT http://localhost:8080/api/predmet/1/angazovanje/3
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "nastavnikId": 1,
+  "ulogaNastavnika": "SARADNIK"
+
+}
+
+### dodavanje loseg predmeta
+POST http://localhost:8080/api/predmet
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naziv": "",
+  "sifra": "UPR",
+  "espb": -5
+}

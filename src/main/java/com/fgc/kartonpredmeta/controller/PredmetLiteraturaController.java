@@ -1,6 +1,5 @@
 package com.fgc.kartonpredmeta.controller;
 
-import com.fgc.kartonpredmeta.dto.AngazovanjeResponseDTO;
 import com.fgc.kartonpredmeta.dto.PredmetLiteraturaRequestDTO;
 import com.fgc.kartonpredmeta.dto.PredmetLiteraturaResponseDTO;
 import com.fgc.kartonpredmeta.service.PredmetLiteraturaService;
@@ -20,7 +19,7 @@ public class PredmetLiteraturaController {
     private final PredmetLiteraturaService predmetLiteraturaService;
 
     @PostMapping
-    public ResponseEntity<PredmetLiteraturaResponseDTO> addPredmetLiteratura(Long predmetId, @Valid @RequestBody PredmetLiteraturaRequestDTO requestDto) {
+    public ResponseEntity<PredmetLiteraturaResponseDTO> addPredmetLiteratura(@PathVariable Long predmetId, @Valid @RequestBody PredmetLiteraturaRequestDTO requestDto) {
         PredmetLiteraturaResponseDTO predmetlit=predmetLiteraturaService.dodajLiteraturuNaPredmet(predmetId, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(predmetlit);
     }

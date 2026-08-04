@@ -8,6 +8,7 @@ import com.fgc.kartonpredmeta.mapper.PredmetnaObavezaMapper;
 import com.fgc.kartonpredmeta.model.Predmet;
 import com.fgc.kartonpredmeta.model.PredmetnaObaveza;
 import com.fgc.kartonpredmeta.service.PredmetnaObavezaService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,9 +25,9 @@ public class PredmetnaObavezaServiceImpl implements PredmetnaObavezaService {
 
     @Override
     @Transactional
-    public PredmetnaObavezaResponseDTO addPredmetnaObaveza(Long predmetId, PredmetnaObavezaRequestDTO requestDTO) {
+    public PredmetnaObavezaResponseDTO addPredmetnaObaveza(Long predmetId, PredmetnaObavezaRequestDTO requestDTO){
         Predmet predmet=predmetRepository.findById(predmetId)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         PredmetnaObaveza po=predmetnaObavezaMapper.toEntity(requestDTO);
         po.setPredmet(predmet);
@@ -36,7 +37,7 @@ public class PredmetnaObavezaServiceImpl implements PredmetnaObavezaService {
     @Override
     public List<PredmetnaObavezaResponseDTO> getAllPredmetneObavezeByPredmetId(Long predmetId) {
         Predmet predmet=predmetRepository.findById(predmetId)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
         return predmet.getObaveze().stream()
                 .map(predmetnaObavezaMapper::toResponseDTO)
                 .toList();
@@ -46,12 +47,12 @@ public class PredmetnaObavezaServiceImpl implements PredmetnaObavezaService {
     @Transactional
     public void deletePredmetnaObaveza(Long predmetId, Long obavezaId) {
         Predmet predmet=predmetRepository.findById(predmetId)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         PredmetnaObaveza obavezaZaBrisanje=predmet.getObaveze().stream()
                 .filter(po->po.getId().equals(obavezaId))
                 .findFirst()
-                .orElseThrow(()->new RuntimeException("Predmetna obaveza ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmetna obaveza ne postoji sa datim ID-jem"));
         predmetnaObavezaRepository.delete(obavezaZaBrisanje);
     }
 
@@ -59,13 +60,13 @@ public class PredmetnaObavezaServiceImpl implements PredmetnaObavezaService {
     @Transactional
     public PredmetnaObavezaResponseDTO updatePredmetnaObaveza(Long predmetId, Long obavezaId, PredmetnaObavezaRequestDTO requestDTO) {
         Predmet predmet=predmetRepository.findById(predmetId)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         PredmetnaObaveza obavezaZaUpdate=predmetnaObavezaRepository.findById(obavezaId)
-                .orElseThrow(()->new RuntimeException("Predmetna obaveza ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmetna obaveza ne postoji sa datim ID-jem"));
         if(!obavezaZaUpdate.getPredmet().getId().equals(predmet.getId()))
         {
-            throw new RuntimeException("Predmetna obaveza ne pripada datom predmetu");
+            throw new IllegalArgumentException("Predmetna obaveza ne pripada datom predmetu");
         }
 
         predmetnaObavezaMapper.updateEntityFromDTO(requestDTO, obavezaZaUpdate);

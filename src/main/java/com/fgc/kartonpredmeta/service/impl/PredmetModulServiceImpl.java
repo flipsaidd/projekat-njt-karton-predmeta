@@ -10,6 +10,7 @@ import com.fgc.kartonpredmeta.model.Modul;
 import com.fgc.kartonpredmeta.model.Predmet;
 import com.fgc.kartonpredmeta.model.PredmetModul;
 import com.fgc.kartonpredmeta.service.PredmetModulService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,13 @@ public class PredmetModulServiceImpl implements PredmetModulService {
     @Transactional
     public PredmetModulResponseDTO dodajPredmetModul(Long predmetId, PredmetModulRequestDTO requestDTO) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         Modul modul = modulRepository.findById(requestDTO.getModulId())
-                .orElseThrow(() -> new RuntimeException("Modul ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Modul ne postoji sa datim ID-jem"));
 
         if (predmet.getModuli().stream().anyMatch(m -> m.getId().equals(modul.getId()))) {
-            throw new RuntimeException("Modul je već povezan sa ovim predmetom");
+            throw new IllegalArgumentException("Modul je već povezan sa ovim predmetom");
         }
 
         PredmetModul predmetModul=predmetModulMapper.toEntity(requestDTO);
@@ -48,7 +49,7 @@ public class PredmetModulServiceImpl implements PredmetModulService {
     @Override
     public List<PredmetModulResponseDTO> getAllModuliByPredmetId(Long predmetId) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         return predmet.getModuli().stream()
                 .map(predmetModulMapper::toResponseDTO)
@@ -59,22 +60,22 @@ public class PredmetModulServiceImpl implements PredmetModulService {
     @Transactional
     public PredmetModulResponseDTO updatePredmetModul(Long predmetId, Long predmetModulId, PredmetModulRequestDTO requestDTO) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         PredmetModul predmetModul = predmetModulRepository.findById(predmetModulId)
-                .orElseThrow(() -> new RuntimeException("PredmetModul ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("PredmetModul ne postoji sa datim ID-jem"));
 
         if (!predmet.getId().equals(predmetModul.getPredmet() != null ? predmetModul.getPredmet().getId() : null)) {
-            throw new RuntimeException("PredmetModul ne pripada datom predmetu");
+            throw new IllegalArgumentException("PredmetModul ne pripada datom predmetu");
         }
 
         Modul modul = modulRepository.findById(requestDTO.getModulId())
-                .orElseThrow(() -> new RuntimeException("Modul ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Modul ne postoji sa datim ID-jem"));
 
         boolean postojiDuplikat = predmet.getModuli().stream()
                 .anyMatch(pm -> !pm.getId().equals(predmetModulId) && pm.getModul().getId().equals(modul.getId()));
         if (postojiDuplikat) {
-            throw new RuntimeException("Modul je već povezan sa ovim predmetom");
+            throw new IllegalArgumentException("Modul je već povezan sa ovim predmetom");
         }
 
         predmetModulMapper.updateEntityFromDTO(requestDTO, predmetModul);
@@ -87,13 +88,13 @@ public class PredmetModulServiceImpl implements PredmetModulService {
     @Transactional
     public void deletePredmetModul(Long predmetId, Long predmetModulId) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         PredmetModul predmetModul = predmetModulRepository.findById(predmetModulId)
-                .orElseThrow(() -> new RuntimeException("PredmetModul ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("PredmetModul ne postoji sa datim ID-jem"));
 
         if (!predmet.getId().equals(predmetModul.getPredmet() != null ? predmetModul.getPredmet().getId() : null)) {
-            throw new RuntimeException("PredmetModul ne pripada datom predmetu");
+            throw new IllegalArgumentException("PredmetModul ne pripada datom predmetu");
         }
 
         predmetModulRepository.delete(predmetModul);

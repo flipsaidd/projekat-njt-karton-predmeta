@@ -1,7 +1,5 @@
 package com.fgc.kartonpredmeta.controller;
 
-import com.fgc.kartonpredmeta.dto.AngazovanjeRequestDTO;
-import com.fgc.kartonpredmeta.dto.AngazovanjeResponseDTO;
 import com.fgc.kartonpredmeta.dto.PredmetModulRequestDTO;
 import com.fgc.kartonpredmeta.dto.PredmetModulResponseDTO;
 import com.fgc.kartonpredmeta.service.PredmetModulService;

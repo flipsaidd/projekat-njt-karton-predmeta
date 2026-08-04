@@ -6,7 +6,6 @@ import com.fgc.kartonpredmeta.dto.ModulDTO;
 import java.util.List;
 
 public interface ModulService {
-
     ModulDTO createModul(ModulDTO modulDTO);
     ModulDTO getModulById(Long id);
     List<ModulDTO> getAllModuli();

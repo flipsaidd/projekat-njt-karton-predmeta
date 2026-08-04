@@ -10,6 +10,7 @@ import com.fgc.kartonpredmeta.model.Angazovanje;
 import com.fgc.kartonpredmeta.model.Nastavnik;
 import com.fgc.kartonpredmeta.model.Predmet;
 import com.fgc.kartonpredmeta.service.AngazovanjeService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,13 @@ public class AngazovanjeServiceImpl implements AngazovanjeService {
     @Transactional
     public AngazovanjeResponseDTO dodajAngazovanje(Long predmetId, AngazovanjeRequestDTO angazovanjeRequestDTO) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         Nastavnik nastavnik = nastavnikRepository.findById(angazovanjeRequestDTO.getNastavnikId())
-                .orElseThrow(() -> new RuntimeException("Nastavnik ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Nastavnik ne postoji sa datim ID-jem"));
 
         if (predmet.getAngazovanja().stream().anyMatch(a -> a.getNastavnik().getId().equals(nastavnik.getId()))) {
-            throw new RuntimeException("Nastavnik je već angažovan na ovom predmetu");
+            throw new IllegalArgumentException("Nastavnik je već angažovan na ovom predmetu");
         }
 
         Angazovanje angazovanje = angazovanjeMapper.toEntity(angazovanjeRequestDTO);
@@ -48,7 +49,7 @@ public class AngazovanjeServiceImpl implements AngazovanjeService {
     @Override
     public List<AngazovanjeResponseDTO> getAllAngazovanjaByPredmetId(Long predmetId) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         return predmet.getAngazovanja().stream()
                 .map(angazovanjeMapper::toResponseDTO)
@@ -59,22 +60,22 @@ public class AngazovanjeServiceImpl implements AngazovanjeService {
     @Transactional
     public AngazovanjeResponseDTO updateAngazovanje(Long predmetId, Long angazovanjeId, AngazovanjeRequestDTO angazovanjeRequestDTO) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         Angazovanje angazovanje = angazovanjeRepository.findById(angazovanjeId)
-                .orElseThrow(() -> new RuntimeException("Angažovanje ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Angažovanje ne postoji sa datim ID-jem"));
 
         if (!predmet.getId().equals(angazovanje.getPredmet() != null ? angazovanje.getPredmet().getId() : null)) {
-            throw new RuntimeException("Angažovanje ne pripada datom predmetu");
+            throw new IllegalArgumentException("Angažovanje ne pripada datom predmetu");
         }
 
         Nastavnik nastavnik = nastavnikRepository.findById(angazovanjeRequestDTO.getNastavnikId())
-                .orElseThrow(() -> new RuntimeException("Nastavnik ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Nastavnik ne postoji sa datim ID-jem"));
 
         boolean postojiDuplikat = predmet.getAngazovanja().stream()
                 .anyMatch(a -> !a.getId().equals(angazovanjeId) && a.getNastavnik().getId().equals(nastavnik.getId()));
         if (postojiDuplikat) {
-            throw new RuntimeException("Nastavnik je već angažovan na ovom predmetu");
+            throw new IllegalArgumentException("Nastavnik je već angažovan na ovom predmetu");
         }
 
         angazovanjeMapper.updateEntityFromDTO(angazovanjeRequestDTO, angazovanje);
@@ -87,13 +88,13 @@ public class AngazovanjeServiceImpl implements AngazovanjeService {
     @Transactional
     public void deleteAngazovanje(Long predmetId, Long angazovanjeId) {
         Predmet predmet = predmetRepository.findById(predmetId)
-                .orElseThrow(() -> new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         Angazovanje angazovanje = angazovanjeRepository.findById(angazovanjeId)
-                .orElseThrow(() -> new RuntimeException("Angažovanje ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Angažovanje ne postoji sa datim ID-jem"));
 
         if (!predmet.getId().equals(angazovanje.getPredmet() != null ? angazovanje.getPredmet().getId() : null)) {
-            throw new RuntimeException("Angažovanje ne pripada datom predmetu");
+            throw new IllegalArgumentException("Angažovanje ne pripada datom predmetu");
         }
 
         angazovanjeRepository.delete(angazovanje);

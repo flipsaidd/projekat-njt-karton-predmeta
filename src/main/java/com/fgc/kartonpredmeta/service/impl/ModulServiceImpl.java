@@ -8,12 +8,12 @@ import com.fgc.kartonpredmeta.mapper.ModulMapper;
 import com.fgc.kartonpredmeta.model.Modul;
 import com.fgc.kartonpredmeta.model.StudijskiProgram;
 import com.fgc.kartonpredmeta.service.ModulService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class ModulServiceImpl implements ModulService {
     @Transactional
     public ModulDTO createModul(ModulDTO modulDTO) {
         StudijskiProgram studijskiProgram = studijskiProgramRepository.findById(modulDTO.getStudijskiProgramId())
-                .orElseThrow(() -> new RuntimeException("Studijski program ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Studijski program ne postoji sa datim ID-jem"));
         Modul modul = modulMapper.toEntity(modulDTO);
         modul.setStudijskiProgram(studijskiProgram);
 
@@ -38,7 +38,7 @@ public class ModulServiceImpl implements ModulService {
     @Override
     public ModulDTO getModulById(Long id) {
         Modul modul = modulRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Modul ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Modul ne postoji sa datim ID-jem"));
         return modulMapper.toDTO(modul);
     }
 
@@ -53,11 +53,11 @@ public class ModulServiceImpl implements ModulService {
     @Transactional
     public ModulDTO updateModul(Long id, ModulDTO modulDTO) {
         Modul modul = modulRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Modul ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Modul ne postoji sa datim ID-jem"));
 
         if(modulDTO.getStudijskiProgramId() != null) {
             StudijskiProgram studijskiProgram = studijskiProgramRepository.findById(modulDTO.getStudijskiProgramId())
-                    .orElseThrow(() -> new RuntimeException("Studijski program ne postoji sa datim ID-jem"));
+                    .orElseThrow(() -> new EntityNotFoundException("Studijski program ne postoji sa datim ID-jem"));
             modul.setStudijskiProgram(studijskiProgram);
         }
 
@@ -69,11 +69,11 @@ public class ModulServiceImpl implements ModulService {
     @Transactional
     public void deleteModul(Long id) {
         if(!modulRepository.existsById(id)) {
-            throw new RuntimeException("Modul ne postoji sa datim ID-jem");
+            throw new EntityNotFoundException("Modul ne postoji sa datim ID-jem");
         }
 
         if(predmetModulRepository.existsByModulId(id)) {
-            throw new RuntimeException("Modul ne može biti obrisan jer je vezan za predmete");
+            throw new IllegalStateException("Modul ne može biti obrisan jer je vezan za predmete");
         }
 
         modulRepository.deleteById(id);

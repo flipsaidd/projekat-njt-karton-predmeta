@@ -6,6 +6,7 @@ import com.fgc.kartonpredmeta.dto.PredmetResponseDTO;
 import com.fgc.kartonpredmeta.mapper.PredmetMapper;
 import com.fgc.kartonpredmeta.model.Predmet;
 import com.fgc.kartonpredmeta.service.PredmetService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,7 @@ public class PredmetServiceImpl implements PredmetService {
     @Transactional(readOnly = true)
     public PredmetResponseDTO findById(Long id) {
         Predmet predmet=predmetRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
         return predmetMapper.toResponseDTO(predmet);
     }
 
@@ -47,7 +48,7 @@ public class PredmetServiceImpl implements PredmetService {
     @Transactional
     public PredmetResponseDTO update(Long id, PredmetRequestDTO requestDTO) {
         Predmet existingPredmet = predmetRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
         Predmet updatedPredmet = predmetMapper.toEntity(requestDTO);
         updatedPredmet.setId(existingPredmet.getId());
@@ -80,7 +81,7 @@ public class PredmetServiceImpl implements PredmetService {
     @Transactional
     public void delete(Long id) {
         Predmet predmet = predmetRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Predmet ne postoji sa datim ID-jem"));
+                .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
         predmetRepository.delete(predmet);
     }
 }
