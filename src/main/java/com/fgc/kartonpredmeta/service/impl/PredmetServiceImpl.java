@@ -1,11 +1,13 @@
 package com.fgc.kartonpredmeta.service.impl;
 
 import com.fgc.kartonpredmeta.JPARepo.PredmetRepository;
+import com.fgc.kartonpredmeta.dto.PredmetFilterDTO;
 import com.fgc.kartonpredmeta.dto.PredmetRequestDTO;
 import com.fgc.kartonpredmeta.dto.PredmetResponseDTO;
 import com.fgc.kartonpredmeta.mapper.PredmetMapper;
 import com.fgc.kartonpredmeta.model.Predmet;
 import com.fgc.kartonpredmeta.service.PredmetService;
+import com.fgc.kartonpredmeta.specification.PredmetSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,12 @@ public class PredmetServiceImpl implements PredmetService {
         return predmetMapper.toResponseDTO(predmet);
     }
 
+    public List<PredmetResponseDTO> findByFilter(PredmetFilterDTO filter) {
+        return predmetRepository.findAll(PredmetSpecification.build(filter)).stream()
+                .map(predmetMapper::toResponseDTO)
+                .toList();
+    }
+
     @Override
     @Transactional
     public PredmetResponseDTO create(PredmetRequestDTO requestDTO) {
@@ -50,30 +58,12 @@ public class PredmetServiceImpl implements PredmetService {
         Predmet existingPredmet = predmetRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Predmet ne postoji sa datim ID-jem"));
 
-        Predmet updatedPredmet = predmetMapper.toEntity(requestDTO);
-        updatedPredmet.setId(existingPredmet.getId());
+        predmetMapper.updateEntityFromDTO(
+                requestDTO,
+                existingPredmet
+        );
 
-        if(updatedPredmet.getLiterature()!=null)
-        {
-            updatedPredmet.getLiterature().forEach(pl->pl.setPredmet(updatedPredmet));
-        }
-
-        if(updatedPredmet.getAngazovanja()!=null)
-        {
-            updatedPredmet.getAngazovanja().forEach(a->a.setPredmet(updatedPredmet));
-        }
-
-        if(updatedPredmet.getObaveze()!=null)
-        {
-            updatedPredmet.getObaveze().forEach(po->po.setPredmet(updatedPredmet));
-        }
-
-        if(updatedPredmet.getModuli()!=null)
-        {
-            updatedPredmet.getModuli().forEach(pm->pm.setPredmet(updatedPredmet));
-        }
-
-        Predmet savedPredmet = predmetRepository.save(updatedPredmet);
+        Predmet savedPredmet = predmetRepository.save(existingPredmet);
         return predmetMapper.toResponseDTO(savedPredmet);
     }
 

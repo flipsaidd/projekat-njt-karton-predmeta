@@ -18,7 +18,7 @@ public class PredmetnaObavezaController {
 
     private final PredmetnaObavezaService predmetnaObavezaService;
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<PredmetnaObavezaResponseDTO> addPredmetnaObaveza(@PathVariable Long predmetId,
                                                                            @Valid @RequestBody PredmetnaObavezaRequestDTO requestDTO) {
         PredmetnaObavezaResponseDTO createdObaveza = predmetnaObavezaService.addPredmetnaObaveza(predmetId, requestDTO);

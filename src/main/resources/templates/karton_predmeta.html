@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Karton Predmeta</title>
+    <style>
+        /* A4 Page Setup za PDF Generator */
+        @page {
+            size: A4;
+            margin: 15mm 15mm 15mm 15mm;
+            @bottom-right {
+                content: "Stranica " counter(page) " od " counter(pages);
+                font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                font-size: 8pt;
+                color: #777;
+            }
+        }
+        body {
+            font-family: 'Roboto', Helvetica, Helvetica Neue, Arial, sans-serif;
+            color: #222222;
+            margin: 0;
+            padding: 0;
+            font-size: 9.5pt;
+            line-height: 1.4;
+        }
+
+        /* Header styling */
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 8px;
+        }
+        .header-table td { border: none; padding: 0; vertical-align: middle; }
+        .univ-title { font-size: 14pt; font-weight: bold; color: #003366; text-transform: uppercase; letter-spacing: 0.5px; }
+        .doc-title { font-size: 12pt; font-weight: bold; color: #444444; text-align: right; text-transform: uppercase; }
+
+        /* Section Headings */
+        .section-header {
+            background-color: #003366;
+            color: #ffffff;
+            font-size: 10pt;
+            font-weight: bold;
+            padding: 4px 8px;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            page-break-after: avoid;
+        }
+
+        /* Data Tables */
+        table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+        table.data-table th, table.data-table td { border: 1px solid #b0c4de; padding: 5px 7px; text-align: left; vertical-align: top; }
+        table.data-table th { background-color: #f0f4f8; color: #003366; font-weight: bold; font-size: 9pt; }
+
+        .label-col { width: 25%; background-color: #f0f4f8; font-weight: bold; color: #003366; }
+        .val-col { width: 25%; }
+
+        /* Text blocks for large text fields */
+        .text-block {
+            border: 1px solid #b0c4de;
+            background-color: #fafbfc;
+            padding: 6px 8px;
+            font-size: 9pt;
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .no-data { font-style: italic; color: #777; }
+    </style>
+</head>
+<body>
+
+<table class="header-table">
+    <tr>
+        <td>
+            <div class="univ-title">Univerzitet u Beogradu</div>
+            <div style="font-size: 10pt; color: #555; font-weight: bold;">Fakultet organizacionih nauka</div>
+        </td>
+        <td style="text-align: right;">
+            <div class="doc-title">KARTON PREDMETA</div>
+            <div style="font-size: 9pt; color: #666;">Akreditacija 2022</div>
+        </td>
+    </tr>
+</table>
+
+<div class="section-header">Osnovni podaci o predmetu</div>
+<table class="data-table">
+    <tr>
+        <td class="label-col">Naziv predmeta:</td>
+        <td class="val-col" colspan="3">
+            <strong style="font-size: 10pt; color: #003366;" th:text="${predmet.naziv}">Naziv predmeta</strong>
+        </td>
+    </tr>
+    <tr>
+        <td class="label-col">Šifra predmeta:</td>
+        <td class="val-col"><strong th:text="${predmet.sifra}">ŠIFRA</strong></td>
+        <td class="label-col">ESPB bodovi:</td>
+        <td class="val-col"><strong th:text="${predmet.espb}">0</strong></td>
+    </tr>
+    <tr>
+        <td class="label-col">Godina studija:</td>
+        <td class="val-col" th:text="${predmet.godinaStudija + '. godina'}">1. godina</td>
+        <td class="label-col">Semestar:</td>
+        <td class="val-col" th:text="${predmet.semestar + '. semestar'}">1. semestar</td>
+    </tr>
+    <tr>
+        <td class="label-col">Fond časova predavanja:</td>
+        <td class="val-col" th:text="${predmet.fondCasovaPredavanja + ' časa nedeljno'}">2</td>
+        <td class="label-col">Fond časova vežbi:</td>
+        <td class="val-col" th:text="${predmet.fondCasovaVezbe + ' časa nedeljno'}">2</td>
+    </tr>
+</table>
+
+<div class="section-header">Moduli na kojima se predmet održava</div>
+<table class="data-table">
+    <thead>
+    <tr>
+
+        <th style="width: 62%;">Naziv modula</th>
+        <th style="width: 30%;">Status predmeta</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="modul, stat : ${predmet.moduli}" th:if="${not #lists.isEmpty(predmet.moduli)}">
+
+        <td th:text="${modul.modulNaziv}">Naziv modula</td>
+        <td>
+            <strong th:text="${modul.statusPredmeta}"
+                    th:style="${modul.statusPredmeta.name() == 'OBAVEZNI'} ? 'color: #8b0000;' : 'color: #006400;'">
+                OBAVEZNI
+            </strong>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(predmet.moduli)}">
+        <td colspan="3" class="no-data">Nema definisanih modula.</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="section-header">Nastavno osoblje (Angažovanja)</div>
+<table class="data-table">
+    <thead>
+    <tr>
+
+        <th style="width: 42%;">Ime i prezime</th>
+        <th style="width: 25%;">Zvanje</th>
+        <th style="width: 25%;">Uloga na predmetu</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="angazovanje, stat : ${predmet.angazovanja}" th:if="${not #lists.isEmpty(predmet.angazovanja)}">
+
+        <td th:text="${angazovanje.ime + ' ' + angazovanje.prezime}">Ime Prezime</td>
+        <td th:text="${angazovanje.zvanje}">Zvanje</td>
+        <td>
+            <strong th:text="${angazovanje.ulogaNastavnika}">NOSILAC</strong>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(predmet.angazovanja)}">
+        <td colspan="4" class="no-data">Nema dodeljenih nastavnika.</td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="section-header">Cilj predmeta</div>
+<div class="text-block">
+    <span th:text="${predmet.cilj}" th:if="${predmet.cilj != null}">Cilj...</span>
+    <span class="no-data" th:unless="${predmet.cilj != null}">Nije definisano.</span>
+</div>
+
+<div class="section-header">Ishodi učenja</div>
+<div class="text-block">
+    <span th:text="${predmet.ishodi}" th:if="${predmet.ishodi != null}">Ishodi...</span>
+    <span class="no-data" th:unless="${predmet.ishodi != null}">Nije definisano.</span>
+</div>
+
+<div class="section-header">Sadržaj predavanja</div>
+<div class="text-block">
+    <span th:text="${predmet.sadrzajPredavanja}" th:if="${predmet.sadrzajPredavanja != null}">Sadržaj predavanja...</span>
+    <span class="no-data" th:unless="${predmet.sadrzajPredavanja != null}">Nije definisano.</span>
+</div>
+
+<div class="section-header">Sadržaj vežbi</div>
+<div class="text-block">
+    <span th:text="${predmet.sadrzajVezbi}" th:if="${predmet.sadrzajVezbi != null}">Sadržaj vežbi...</span>
+    <span class="no-data" th:unless="${predmet.sadrzajVezbi != null}">Nije definisano.</span>
+</div>
+
+<div class="section-header">Način polaganja predmeta i vrednovanje</div>
+<div class="text-block" style="margin-bottom: 5px;">
+    <span th:text="${predmet.nacinPolaganja}" th:if="${predmet.nacinPolaganja != null}">Način polaganja...</span>
+    <span class="no-data" th:unless="${predmet.nacinPolaganja != null}">Nije definisano.</span>
+</div>
+
+<table class="data-table">
+    <thead>
+    <tr>
+
+        <th style="width: 50%;">Naziv obaveze</th>
+        <th style="width: 22%;">Vrsta obaveze</th>
+        <th style="width: 20%; text-align: right;">Max poena</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="obaveza, stat : ${predmet.obaveze}" th:if="${not #lists.isEmpty(predmet.obaveze)}">
+
+        <td th:text="${obaveza.naziv}">Naziv obaveze</td>
+        <td th:text="${obaveza.vrstaObaveze}">PREDISPITNA</td>
+        <td style="text-align: right;" th:text="${obaveza.maxPoena}">50</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(predmet.obaveze)}">
+        <td colspan="4" class="no-data">Nema definisanih obaveza.</td>
+    </tr>
+    <tr style="font-weight: bold; background-color: #f0f4f8;" th:if="${not #lists.isEmpty(predmet.obaveze)}">
+        <td colspan="3" style="text-align: right; color: #003366;">UKUPNO:</td>
+        <td style="text-align: right; color: #003366;">
+            100 poena
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="section-header">Obavezna i preporučena literatura</div>
+<table class="data-table">
+    <thead>
+    <tr>
+        <th style="width: 6%;">R.br.</th>
+        <th style="width: 34%;">Naslov</th>
+        <th style="width: 25%;">Autor(i)</th>
+        <th style="width: 8%;">Godina</th>
+        <th style="width: 15%;">Izdavač</th>
+        <th style="width: 12%;">Vrsta</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="lit, stat : ${predmet.literature}" th:if="${not #lists.isEmpty(predmet.literature)}">
+        <td th:text="${stat.count + '.'}">1.</td>
+        <td th:text="${lit.naslov}">Naslov knjige</td>
+        <td th:text="${lit.autori}">Autori</td>
+        <td th:text="${lit.godinaIzdanja}">2023</td>
+        <td th:text="${lit.izdavac}">Izdavač</td>
+        <td><strong th:text="${lit.vrstaLiterature}">OBAVEZNA</strong></td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(predmet.literature)}">
+        <td colspan="6" class="no-data">Literatura nije navedena.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

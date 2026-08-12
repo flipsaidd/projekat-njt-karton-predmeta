@@ -1,7 +1,6 @@
 package com.fgc.kartonpredmeta.exception;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;

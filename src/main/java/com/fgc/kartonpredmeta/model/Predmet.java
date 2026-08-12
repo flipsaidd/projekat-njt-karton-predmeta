@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Predmet implements DomainEntity{
 
     @Id
@@ -55,18 +54,14 @@ public class Predmet implements DomainEntity{
     private String nacinPolaganja;
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<PredmetModul> moduli = new ArrayList<>();
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<Angazovanje> angazovanja = new ArrayList<>();
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<PredmetnaObaveza> obaveze = new ArrayList<>();
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<PredmetLiteratura> literature = new ArrayList<>();
 }

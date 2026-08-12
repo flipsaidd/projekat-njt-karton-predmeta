@@ -105,3 +105,110 @@ Content-Type: application/json
   "sifra": "UPR",
   "espb": -5
 }
+###
+POST http://localhost:8080/api/nastavnici
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "ime": "Dejan",
+  "prezime": "Orolic",
+  "zvanje": "dr",
+  "email": "dejan.orolic@gimnks.rs"
+}
+###
+POST http://localhost:8080/api/literatura
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naslov": "Principi programiranja u C#",
+  "autori": "Milan Josifovic, Gordana Maksimovic",
+  "godinaIzdanja": 2015
+}
+###
+POST http://localhost:8080/api/predmet
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naziv": "Objektno orijentisano programiranje",
+  "sifra": "OOP22",
+  "espb": 6,
+  "godinaStudija": 2,
+  "semestar": 3,
+  "fondCasovaPredavanja": 60,
+  "fondCasovaVezbe": 60,
+  "cilj": "Upoznavanje studenata sa osnovama objektno orijentisanog programiranja i primenom istih u praksi.",
+  "ishodi": "Student je u stanju da razume osnovne koncepte objektno orijentisanog programiranja, kao i da primeni iste u razvoju softverskih rešenja.",
+  "sadrzajPredavanja": "Upoznavanje sa osnovnim konceptima objektno orijentisanog programiranja, kao što su klase, objekti, nasleđivanje, polimorfizam i enkapsulacija. Razvoj softverskih rešenja korišćenjem objektno orijentisanih principa.",
+    "sadrzajVezbi": "Praktične vežbe koje omogućavaju studentima da primene naučene koncepte u razvoju softverskih rešenja. Rad na projektima i zadacima koji zahtevaju korišćenje objektno orijentisanih principa.",
+  "nacinPolaganja": "Usmeni ispit i praktični rad"
+}
+
+###
+POST http://localhost:8080/api/predmet/2/obaveza
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naziv": "Kolokvijum",
+  "vrstaObaveze": "PREDISPITNA",
+  "maxPoena": 30
+}
+
+###
+POST http://localhost:8080/api/predmet/2/obaveza
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "naziv": "Zavrsni ispit",
+  "vrstaObaveze": "ISPITNA",
+  "maxPoena": 70
+}
+###
+POST http://localhost:8080/api/predmet/2/pl
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+    "literaturaId": 4,
+    "vrstaLiterature": "PREPORUCENA"
+}
+###
+POST http://localhost:8080/api/predmet/2/pm
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+    "modulId": 1,
+    "statusPredmeta": "OBAVEZAN"
+}
+###
+GET http://localhost:8080/api/modul
+Authorization: Bearer {{auth_token}}
+###
+GET http://localhost:8080/api/predmet/2
+Authorization: Bearer {{auth_token}}
+###
+GET http://localhost:8080/api/nastavnici
+Authorization: Bearer {{auth_token}}
+###
+POST http://localhost:8080/api/predmet/2/angazovanje
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "nastavnikId": 5,
+  "ulogaNastavnika": "SARADNIK"
+}
+### generisanje kartona pdf
+GET http://localhost:8080/api/predmet/2/pdf
+Authorization: Bearer {{auth_token}}
+
+>>! izlazni_karton.pdf
+
+### probam sa filterima
+GET http://localhost:8080/api/predmet/2
+Authorization: Bearer {{auth_token}}
