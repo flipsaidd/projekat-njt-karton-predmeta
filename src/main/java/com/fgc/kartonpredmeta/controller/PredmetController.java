@@ -7,6 +7,9 @@ import com.fgc.kartonpredmeta.service.PdfGeneratorService;
 import com.fgc.kartonpredmeta.service.PredmetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/predmet")
@@ -25,8 +27,10 @@ public class PredmetController {
     private final PdfGeneratorService pdfGeneratorService;
 
     @GetMapping
-    public ResponseEntity<List<PredmetResponseDTO>> getAll(@ModelAttribute PredmetFilterDTO filter) {
-        return ResponseEntity.ok(predmetService.findByFilter(filter));
+    public ResponseEntity<Page<PredmetResponseDTO>> getAll(@ModelAttribute PredmetFilterDTO filter,
+                                                           @PageableDefault(size=5,sort="id") Pageable pageable) {
+        Page<PredmetResponseDTO> predmetPage = predmetService.findByFilter(filter, pageable);
+        return ResponseEntity.ok(predmetPage);
     }
 
     @GetMapping("/{id}")

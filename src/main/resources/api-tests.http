@@ -212,3 +212,20 @@ Authorization: Bearer {{auth_token}}
 ### probam sa filterima
 GET http://localhost:8080/api/predmet/2
 Authorization: Bearer {{auth_token}}
+
+### liteatura
+POST http://localhost:8080/api/literatura
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "id": null,
+  "naziv": "nesto",
+  "autori": "nesto",
+  "godinaIzdanja": 2023,
+  "izdavac": "fon"
+}
+
+### izbrisi predmet
+DELETE http://localhost:8080/api/predmet/11
+Authorization: Bearer {{auth_token}}

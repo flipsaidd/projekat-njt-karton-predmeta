@@ -10,6 +10,9 @@ import com.fgc.kartonpredmeta.service.PredmetService;
 import com.fgc.kartonpredmeta.specification.PredmetSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,11 +41,12 @@ public class PredmetServiceImpl implements PredmetService {
         return predmetMapper.toResponseDTO(predmet);
     }
 
-    public List<PredmetResponseDTO> findByFilter(PredmetFilterDTO filter) {
-        return predmetRepository.findAll(PredmetSpecification.build(filter)).stream()
-                .map(predmetMapper::toResponseDTO)
-                .toList();
+    public Page<PredmetResponseDTO> findByFilter(PredmetFilterDTO filter, Pageable pageable) {
+        Specification<Predmet> specification = PredmetSpecification.build(filter);
+        Page<Predmet> predmetPage=predmetRepository.findAll(specification, pageable);
+        return predmetPage.map(predmetMapper::toResponseDTO);
     }
+
 
     @Override
     @Transactional
