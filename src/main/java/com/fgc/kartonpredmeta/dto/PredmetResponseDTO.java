@@ -36,4 +36,8 @@ public class PredmetResponseDTO implements DomainDTO{
     private List<PredmetnaObavezaResponseDTO> obaveze;
 
     private List<PredmetLiteraturaResponseDTO> literature;
+
+    private List<PredmetOblikNastaveResponseDTO> oblici;
+
+
 }

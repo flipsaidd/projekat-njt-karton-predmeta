@@ -29,12 +29,6 @@ public class PredmetRequestDTO implements DomainDTO {
     @NotNull(message = "Semestar je obavezan")
     private Integer semestar;
 
-    @NotNull(message = "Fond časova predavanja je obavezan")
-    private Integer fondCasovaPredavanja;
-
-    @NotNull(message = "Fond časova vežbi je obavezan")
-    private Integer fondCasovaVezbe;
-
     private String cilj;
     private String ishodi;
     private String sadrzajPredavanja;
@@ -52,4 +46,7 @@ public class PredmetRequestDTO implements DomainDTO {
 
     @Valid
     private List<PredmetnaObavezaRequestDTO> obaveze;
+
+    @Valid
+    private List<PredmetOblikNastaveRequestDTO> oblici;
 }

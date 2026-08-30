@@ -3,6 +3,9 @@ package com.fgc.kartonpredmeta.controller;
 import com.fgc.kartonpredmeta.dto.PredmetFilterDTO;
 import com.fgc.kartonpredmeta.dto.PredmetRequestDTO;
 import com.fgc.kartonpredmeta.dto.PredmetResponseDTO;
+import com.fgc.kartonpredmeta.parser.Lexer;
+import com.fgc.kartonpredmeta.parser.Parser;
+import com.fgc.kartonpredmeta.parser.Token;
 import com.fgc.kartonpredmeta.service.PdfGeneratorService;
 import com.fgc.kartonpredmeta.service.PredmetService;
 import jakarta.validation.Valid;
@@ -15,8 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/predmet")
@@ -61,6 +67,21 @@ public class PredmetController {
     public ResponseEntity<PredmetResponseDTO> create(@Valid @RequestBody PredmetRequestDTO requestDTO) {
         PredmetResponseDTO response = predmetService.create(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<PredmetResponseDTO> importPredmet(@RequestParam("file") MultipartFile file) throws IOException{
+        String sadrzaj=new String(file.getBytes(), StandardCharsets.UTF_8);
+
+        Lexer lexer = new Lexer(sadrzaj);
+        List<Token> tokeni=lexer.tokenize();
+
+        Parser parser = new Parser(tokeni);
+        PredmetRequestDTO dto = parser.parse();
+
+        PredmetResponseDTO response = predmetService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
     }
 
     @PutMapping("/{id}")

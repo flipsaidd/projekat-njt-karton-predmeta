@@ -3,6 +3,7 @@ package com.fgc.kartonpredmeta.service.impl;
 import com.fgc.kartonpredmeta.dto.PredmetResponseDTO;
 import com.fgc.kartonpredmeta.service.PdfGeneratorService;
 import com.fgc.kartonpredmeta.service.PredmetService;
+import com.fgc.kartonpredmeta.util.TextStyler;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,12 @@ public class PdfGeneratorServiceImpl implements PdfGeneratorService {
     @Override
     public byte[] generisiKartonPredmetaPdf(Long predmetId) throws IOException {
         PredmetResponseDTO predmetResponseDTO = predmetService.findById(predmetId);
+
+        if(predmetResponseDTO.getCilj()!=null) predmetResponseDTO.setCilj(TextStyler.dodajStil(predmetResponseDTO.getCilj()));
+        if(predmetResponseDTO.getIshodi()!=null) predmetResponseDTO.setIshodi(TextStyler.dodajStil(predmetResponseDTO.getIshodi()));
+        if(predmetResponseDTO.getSadrzajPredavanja()!=null) predmetResponseDTO.setSadrzajPredavanja(TextStyler.dodajStil(predmetResponseDTO.getSadrzajPredavanja()));
+        if(predmetResponseDTO.getSadrzajVezbi()!=null) predmetResponseDTO.setSadrzajVezbi(TextStyler.dodajStil(predmetResponseDTO.getSadrzajVezbi()));
+
 
         Context context = new Context();
         context.setVariable("predmet", predmetResponseDTO);
