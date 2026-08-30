@@ -26,4 +26,6 @@ public class LiteraturaDTO implements DomainDTO {
 
     private String izdavac;
 
+    private String isbn;
+
 }

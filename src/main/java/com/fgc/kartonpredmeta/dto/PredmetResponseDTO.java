@@ -20,9 +20,6 @@ public class PredmetResponseDTO implements DomainDTO{
     private Integer godinaStudija;
     private Integer semestar;
 
-    private Integer fondCasovaPredavanja;
-    private Integer fondCasovaVezbe;
-
     private String cilj;
     private String ishodi;
     private String sadrzajPredavanja;
@@ -36,4 +33,8 @@ public class PredmetResponseDTO implements DomainDTO{
     private List<PredmetnaObavezaResponseDTO> obaveze;
 
     private List<PredmetLiteraturaResponseDTO> literature;
+
+    private List<PredmetOblikNastaveResponseDTO> oblici;
+
+
 }

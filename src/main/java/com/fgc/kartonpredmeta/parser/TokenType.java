@@ -1,0 +1,7 @@
+package com.fgc.kartonpredmeta.parser;
+
+public enum TokenType {
+    KEYWORD_NAZIV, KEYWORD_SIFRA, KEYWORD_ESPB, KEYWORD_GODINA, KEYWORD_SEMESTAR, KEYWORD_OBAVEZE,
+    COLON, STRING, NUMBER, EOF, LBRACE, RBRACE
+
+}

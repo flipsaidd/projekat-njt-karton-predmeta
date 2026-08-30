@@ -7,9 +7,8 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring",uses={PredmetModulMapper.class, AngazovanjeMapper.class, PredmetnaObavezaMapper.class, PredmetLiteraturaMapper.class})
+@Mapper(componentModel = "spring",uses={PredmetModulMapper.class, AngazovanjeMapper.class, PredmetnaObavezaMapper.class, PredmetLiteraturaMapper.class,PredmetOblikNastaveMapper.class})
 public interface PredmetMapper {
 
     PredmetResponseDTO toResponseDTO(Predmet entitet);
@@ -34,5 +33,9 @@ public interface PredmetMapper {
         if (predmet.getLiterature() != null) {
             predmet.getLiterature().forEach(l -> l.setPredmet(predmet));
         }
+        if (predmet.getOblici() != null) {
+            predmet.getOblici().forEach(o -> o.setPredmet(predmet));
+        }
+
     }
 }

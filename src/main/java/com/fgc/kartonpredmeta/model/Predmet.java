@@ -32,12 +32,6 @@ public class Predmet implements DomainEntity{
     @Column(nullable = false)
     private Integer semestar;
 
-    @Column(name = "fond_casova_p", nullable = false)
-    private Integer fondCasovaPredavanja;
-
-    @Column(name = "fond_casova_v", nullable = false)
-    private Integer fondCasovaVezbe;
-
     @Column(columnDefinition = "TEXT")
     private String cilj;
 
@@ -64,4 +58,7 @@ public class Predmet implements DomainEntity{
 
     @OneToMany(mappedBy = "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PredmetLiteratura> literature = new ArrayList<>();
+
+    @OneToMany(mappedBy= "predmet", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PredmetOblikNastave> oblici = new ArrayList<>();
 }

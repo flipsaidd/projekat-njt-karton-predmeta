@@ -5,7 +5,6 @@ import com.fgc.kartonpredmeta.dto.PredmetLiteraturaResponseDTO;
 import com.fgc.kartonpredmeta.model.PredmetLiteratura;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
 public interface PredmetLiteraturaMapper {
@@ -15,6 +14,7 @@ public interface PredmetLiteraturaMapper {
     @Mapping(source="literatura.autori", target="autori")
     @Mapping(source="literatura.godinaIzdanja", target="godinaIzdanja")
     @Mapping(source="literatura.izdavac", target="izdavac")
+    @Mapping(source="literatura.isbn", target="isbn")
     PredmetLiteraturaResponseDTO toResponseDTO(PredmetLiteratura entitet);
 
     @Mapping(target = "id", ignore = true)

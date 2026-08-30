@@ -17,6 +17,7 @@ public class PredmetLiteraturaResponseDTO implements DomainDTO{
     private String autori;
     private Integer godinaIzdanja;
     private String izdavac;
+    private String isbn;
 
     private VrstaLiterature vrstaLiterature;
 }

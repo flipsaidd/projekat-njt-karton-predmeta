@@ -4,7 +4,6 @@
     <meta charset="UTF-8"/>
     <title>Karton Predmeta</title>
     <style>
-        /* A4 Page Setup za PDF Generator */
         @page {
             size: A4;
             margin: 15mm 15mm 15mm 15mm;
@@ -24,7 +23,6 @@
             line-height: 1.4;
         }
 
-        /* Header styling */
         .header-table {
             width: 100%;
             border-collapse: collapse;
@@ -36,7 +34,6 @@
         .univ-title { font-size: 14pt; font-weight: bold; color: #003366; text-transform: uppercase; letter-spacing: 0.5px; }
         .doc-title { font-size: 12pt; font-weight: bold; color: #444444; text-align: right; text-transform: uppercase; }
 
-        /* Section Headings */
         .section-header {
             background-color: #003366;
             color: #ffffff;
@@ -50,7 +47,6 @@
             page-break-after: avoid;
         }
 
-        /* Data Tables */
         table.data-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
         table.data-table th, table.data-table td { border: 1px solid #b0c4de; padding: 5px 7px; text-align: left; vertical-align: top; }
         table.data-table th { background-color: #f0f4f8; color: #003366; font-weight: bold; font-size: 9pt; }
@@ -58,7 +54,6 @@
         .label-col { width: 25%; background-color: #f0f4f8; font-weight: bold; color: #003366; }
         .val-col { width: 25%; }
 
-        /* Text blocks for large text fields */
         .text-block {
             border: 1px solid #b0c4de;
             background-color: #fafbfc;
@@ -167,25 +162,25 @@
 
 <div class="section-header">Cilj predmeta</div>
 <div class="text-block">
-    <span th:text="${predmet.cilj}" th:if="${predmet.cilj != null}">Cilj...</span>
+    <span th:utext="${predmet.cilj}" th:if="${predmet.cilj != null}">Cilj...</span>
     <span class="no-data" th:unless="${predmet.cilj != null}">Nije definisano.</span>
 </div>
 
 <div class="section-header">Ishodi učenja</div>
 <div class="text-block">
-    <span th:text="${predmet.ishodi}" th:if="${predmet.ishodi != null}">Ishodi...</span>
+    <span th:utext="${predmet.ishodi}" th:if="${predmet.ishodi != null}">Ishodi...</span>
     <span class="no-data" th:unless="${predmet.ishodi != null}">Nije definisano.</span>
 </div>
 
 <div class="section-header">Sadržaj predavanja</div>
 <div class="text-block">
-    <span th:text="${predmet.sadrzajPredavanja}" th:if="${predmet.sadrzajPredavanja != null}">Sadržaj predavanja...</span>
+    <span th:utext="${predmet.sadrzajPredavanja}" th:if="${predmet.sadrzajPredavanja != null}">Sadržaj predavanja...</span>
     <span class="no-data" th:unless="${predmet.sadrzajPredavanja != null}">Nije definisano.</span>
 </div>
 
 <div class="section-header">Sadržaj vežbi</div>
 <div class="text-block">
-    <span th:text="${predmet.sadrzajVezbi}" th:if="${predmet.sadrzajVezbi != null}">Sadržaj vežbi...</span>
+    <span th:utext="${predmet.sadrzajVezbi}" th:if="${predmet.sadrzajVezbi != null}">Sadržaj vežbi...</span>
     <span class="no-data" th:unless="${predmet.sadrzajVezbi != null}">Nije definisano.</span>
 </div>
 

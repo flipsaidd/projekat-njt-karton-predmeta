@@ -3,8 +3,8 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "username": "ariana",
-  "password": "grande"
+  "username": "filip",
+  "password": "cvetkovic"
 }
 
 > {%
@@ -54,12 +54,12 @@ Authorization: Bearer {{auth_token}}
 
 
 ### dodaj angazovanje
-POST http://localhost:8080/api/predmet/1/angazovanje/add
+POST http://localhost:8080/api/predmet/1/angazovanje
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-  "nastavnikId": 2,
+  "nastavnikId": 3,
   "ulogaNastavnika": "SARADNIK"
 
 }
@@ -69,12 +69,12 @@ DELETE http://localhost:8080/api/predmet/1/angazovanje/4
 Authorization: Bearer {{auth_token}}
 
 ### dodaj angazovanje drugo
-POST http://localhost:8080/api/predmet/1/angazovanje/add
+POST http://localhost:8080/api/predmet/1/angazovanje
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-  "nastavnikId": 1,
+  "nastavnikId": 5,
   "ulogaNastavnika": "NOSILAC"
 
 }
@@ -122,7 +122,7 @@ Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-  "naslov": "Principi programiranja u C#",
+  "naslov": "Principi OOP u C#",
   "autori": "Milan Josifovic, Gordana Maksimovic",
   "godinaIzdanja": 2015
 }
@@ -147,7 +147,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/api/predmet/2/obaveza
+POST http://localhost:8080/api/predmet/1/obaveza
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
@@ -158,7 +158,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/api/predmet/2/obaveza
+POST http://localhost:8080/api/predmet/1/obaveza
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
@@ -177,12 +177,12 @@ Content-Type: application/json
     "vrstaLiterature": "PREPORUCENA"
 }
 ###
-POST http://localhost:8080/api/predmet/2/pm
+POST http://localhost:8080/api/predmet/1/modul
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 
 {
-    "modulId": 1,
+    "modulId": 3,
     "statusPredmeta": "OBAVEZAN"
 }
 ###
@@ -229,3 +229,37 @@ Content-Type: application/json
 ### izbrisi predmet
 DELETE http://localhost:8080/api/predmet/11
 Authorization: Bearer {{auth_token}}
+
+### dodaj oblik
+POST http://localhost:8080/api/predmet/1/oblik-nastave
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "oblikId": 2,
+  "fondCasova": 2
+}
+
+
+### vrati predmet
+GET http://localhost:8080/api/predmet
+Authorization: Bearer {{auth_token}}
+
+### vrati oblike
+GET http://localhost:8080/api/oblik
+Authorization: Bearer {{auth_token}}
+
+
+### nova literatura
+POST http://localhost:8080/api/literatura
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "id": null,
+  "naslov": "neki",
+  "autori": "autori",
+  "godinaIzdanja": 2003,
+  "izdavac": "neki",
+  "isbn": "chile"
+}

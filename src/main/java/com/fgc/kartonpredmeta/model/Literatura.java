@@ -28,4 +28,7 @@ public class Literatura implements DomainEntity{
     @Column
     private String izdavac;
 
+    @Column
+    private String isbn;
+
 }
